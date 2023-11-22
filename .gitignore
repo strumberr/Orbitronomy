@@ -6,8 +6,10 @@ datasets/
 orbitronomy.egg-info/
 
 README3.md
+README2.md
 
 .DS_Store/
+.DS_Store
 
 # C extensions
 *.so
