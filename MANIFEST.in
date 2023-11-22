@@ -1,0 +1,3 @@
+include orbitronomy/*.txt
+include orbitronomy/*.py
+recursive-include orbitronomy *

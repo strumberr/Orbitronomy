@@ -301,8 +301,8 @@ class SimpleOrbit:
 
 # test.plotStyle(background_color="dark_background")
 
+# the form of the list should be as follows: "name", semi_major_axis, perihelion, eccentricity, inclination, longitude_of_ascending_node, argument_of_perihelion, color (optional)
 # data = [["object1", 1, 0.983289891, 0.01671123, 15, 0, 0, "green"], ["object2", 1.5, 0.483289891, 0.02671123, 6, 0, 0, "yellow"], ["object3", 1.3, 0.683289891, 0.01671123, 2, 0, 0, "red"]]
-
 
 #you can also use the following instead of data if you want to plot a single object
 # test.semiMajorAxis(1)
@@ -319,10 +319,10 @@ class SimpleOrbit:
 #                     trajectory=True, sun=True)
 
 
-# #you can choose if you want to set boundaries for the plot
-# # test.xLim([20, 20])
-# # test.yLim([20, 20])
-# # test.zLim([0.1, 0.1])
+#you can choose if you want to set boundaries for the plot
+# test.xLim([20, 20])
+# test.yLim([20, 20])
+# test.zLim([0.1, 0.1])
 
 # test.xLabel("X-Axis")
 # test.yLabel("Y-Axis")

@@ -1,30 +1,30 @@
-## <span style="color:#857EBB;">Official Orbitronomy Library</span>
+# Official Orbitronomy Library
 
-The `Orbitronomy` library offers functionality for calculating, visualizing, plotting, and animating the orbits of various celestial bodies in 3D. It utilizes Kepler's elliptical orbit equations and PyAstronomy for orbital calculations, and Matplotlib for 3D plotting.
+The `Orbitronomy` library offers the functionality for plotting, calculating, visualizing, and animating the orbits of various celestial bodies in 3D space. It utilizes Kepler's elliptical orbit equations along with PyAstronomy for orbital calculations, and Matplotlib for 3D plotting.
 
-### <span style="color:#FACBD3;">SimpleOrbit Class</span>
+## SimpleOrbit Class
 
 The `SimpleOrbit` class provides the capability of simulating single object orbits, and multiple object orbits in the format of a list within list.
 
-#### <span style="color:#CA9DD7;">Constructor</span>
+### Constructor
 
 **SimpleOrbit(plot_title, name)**
 
-##### Parameters:
+#### Parameters:
 
-- <span style="color:#CA9DD7;">plot_title</span>: Title for the plot.
-- <span style="color:#CA9DD7;">name</span>: Identifier for the celestial body.
+- `plot_title`: Title for the plot.
+- `name`: Identifier for the celestial body.
 
-#### <span style="color:#CA9DD7;">Methods</span>
+### Methods
 
-- <span style="color:#CA9DD7;">faceColor(color)</span>: Sets the face color of the axes.
-- <span style="color:#CA9DD7;">paneColor(color)</span>: Sets the color of the 3D panes.
-- <span style="color:#CA9DD7;">gridColor(color)</span>: Sets the grid color.
-- <span style="color:#CA9DD7;">orbitTransparency(value): Sets the transparency of the orbits.
-- <span style="color:#CA9DD7;">labelColor(color)</span>: Sets the color of axis labels.
-- <span style="color:#CA9DD7;">tickColor(color)</span>: Sets the color of axis ticks.
-- <span style="color:#CA9DD7;">plotStyle(background_color)</span>: Sets the background style of the plot.
-- <span style="color:#CA9DD7;">semiMajorAxis(value), perihelion(value), eccentricity(value), inclination(value), longitudeOfAscendingNode(value), argumentOfPerihelion(value)</span>: Set specific orbital parameters.
+- `faceColor(color)`: Sets the face color of the axes.
+- `paneColor(color)`: Sets the color of the 3D panes.
+- `gridColor(color)`: Sets the grid color.
+- `orbitTransparency(value)`: Sets the transparency of the orbits.
+- `labelColor(color)`: Sets the color of axis labels.
+- `tickColor(color)`: Sets the color of axis ticks.
+- `plotStyle(background_color)`: Sets the background style of the plot.
+- `semiMajorAxis(value)`, `perihelion(value)`, `eccentricity(value)`, `inclination(value)`, `longitudeOfAscendingNode(value)`, `argumentOfPerihelion(value)`: Set specific orbital parameters.
 
 #### Usage Example:
 
@@ -43,7 +43,17 @@ test.tickColor("white")
 
 test.plotStyle(background_color="dark_background")
 
+# the form of the "data" list should be as follows: 
+# "name", semi_major_axis, perihelion, eccentricity, inclination, longitude_of_ascending_node, argument_of_perihelion, color (optional)
 data = [["object1", 1, 0.983289891, 0.01671123, 15, 0, 0, "green"], ["object2", 1.5, 0.483289891, 0.02671123, 6, 0, 0, "yellow"], ["object3", 1.3, 0.683289891, 0.01671123, 2, 0, 0, "red"]]
+
+#you can also use the following instead of "data" array if you want to plot a single object
+# test.semiMajorAxis(1)
+# test.perihelion(0.983289891)
+# test.eccentricity(0.01671123)
+# test.inclination(0)
+# test.longitudeOfAscendingNode(0)
+# test.argumentOfPerihelion(0)
 
 # Calculating and plotting orbits
 test.calculateOrbit(plot_steps=1000, n_orbits=1, data=data, trajectory=True, sun=True)
@@ -63,51 +73,53 @@ test.animateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small", expo
 ```
 
 
-## <span style="color:#857EBB;">Orbitronomy Library with Dataset Functionality</span>
+![Quick Documentation SimpleOrbit](static/simpleOrbitDoc.png?raw=true)
+
+# Orbitronomy Library with Dataset Functionality
 
 The `Orbitronomy` library is enhanced with functionality to calculate, visualize, plot, and animate orbits of celestial bodies in 3D using datasets. It utilizes Kepler's elliptical orbit equations, PyAstronomy for orbital calculations, and Matplotlib for 3D plotting.
 
-### <span style="color:#FACBD3;">datasetOrbit Class</span>
+## datasetOrbit Class
 
 The `datasetOrbit` class extends the capabilities of the `SimpleOrbit` class, allowing for the use of datasets to plot multiple celestial bodies.
 
-#### <span style="color:#CA9DD7;">Constructor</span>
+### Constructor
 
 **datasetOrbit(plot_title, name)**
 
-##### Parameters:
+#### Parameters:
 
-- <span style="color:#CA9DD7;">plot_title</span>: Title for the plot.
-- <span style="color:#CA9DD7;">name</span>: Identifier for the celestial body or simulation.
+- `plot_title`: Title for the plot.
+- `name`: Identifier for the celestial body or simulation.
 
-#### <span style="color:#FACBD3;">**Styling Methods**</span>
+### Styling Methods
 
-- <span style="color:#CA9DD7;">faceColor</span>(color)
-- <span style="color:#CA9DD7;">paneColor</span>(color)
-- <span style="color:#CA9DD7;">gridColor</span>(color)
-- <span style="color:#CA9DD7;">orbitTransparency</span>(value)
-- <span style="color:#CA9DD7;">labelColor</span>(color)
-- <span style="color:#CA9DD7;">tickColor</span>(color)
-- <span style="color:#CA9DD7;">datasetPlotStyle(background_color)
+- `faceColor(color)`
+- `paneColor(color)`
+- `gridColor(color)`
+- `orbitTransparency(value)`
+- `labelColor(color)`
+- `tickColor(color)`
+- `datasetPlotStyle(background_color)`
 
-#### <span style="color:#FACBD3;">Dataset Configuration</span>
+### Dataset Configuration
 
-- <span style="color:#CA9DD7;">columnSemiMajorAxis</span>(column_name)
-- <span style="color:#CA9DD7;">columnPerihelion</span>(column_name)
-- <span style="color:#CA9DD7;">columnEccentricity</span>(column_name)
-- <span style="color:#CA9DD7;">columnInclination</span>(column_name)
-- <span style="color:#CA9DD7;">columnLongitudeOfAscendingNode</span>(column_name)
-- <span style="color:#CA9DD7;">columnArgumentOfPerihelion</span>(column_name)
-- <span style="color:#CA9DD7;">columnColor</span>(column_name)
-- <span style="color:#CA9DD7;">columnName</span>(column_name)
-- <span style="color:#CA9DD7;">fileName</span>(file_name)
+- `columnSemiMajorAxis(column_name)`
+- `columnPerihelion(column_name)`
+- `columnEccentricity(column_name)`
+- `columnInclination(column_name)`
+- `columnLongitudeOfAscendingNode(column_name)`
+- `columnArgumentOfPerihelion(column_name)`
+- `columnColor(column_name)`
+- `columnName(column_name)`
+- `fileName(file_name)`
 
-#### <span style="color:#FACBD3;">Orbit Calculation and Animation</span>
+### Orbit Calculation and Animation
 
-- <span style="color:#CA9DD7;">datasetCalculateOrbit</span>(plot_steps, n_orbits, color, trajectory, sun, random_color)
-- <span style="color:#CA9DD7;">xLim(lim), yLim(lim), zLim(lim)</span>
-- <span style="color:#CA9DD7;">xLabel(label), yLabel(label), zLabel(label)</span>
-- <span style="color:#CA9DD7;">datasetAnimateOrbit</span>(dpi, save, export_zoom, font_size, export_folder)
+- `datasetCalculateOrbit(plot_steps, n_orbits, color, trajectory, sun, random_color)`
+- `xLim(lim), yLim(lim), zLim(lim)`
+- `xLabel(label), yLabel(label), zLabel(label)`
+- `datasetAnimateOrbit(dpi, save, export_zoom, font_size, export_folder)`
 
 #### Usage Example:
 
@@ -126,8 +138,7 @@ test.tickColor("white")
 
 test.datasetPlotStyle(background_color="dark_background")
 
-# Dataset column configuration (the name of each column of the CSV dataset being used)
-test.columnSemiMajorAxis("semi_major_axis")
+# Dataset column configuration
 test.columnSemiMajorAxis("semi_major_axis")
 test.columnPerihelion("perihelion")
 test.columnEccentricity("eccentricity")
@@ -148,6 +159,7 @@ test.datasetCalculateOrbit(plot_steps=1000, n_orbits=12, color="yellow", random_
 # test.yLim([20, 20])
 # test.zLim([0.1, 0.1])
 
+# Setting axis labels
 test.xLabel("X-Axis")
 test.yLabel("Y-Axis")
 test.zLabel("Z-Axis")
@@ -155,3 +167,5 @@ test.zLabel("Z-Axis")
 # Animating the orbits
 test.datasetAnimateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small")
 ```
+
+![Quick Documentation datasetOrbit](static/datasetOrbitDoc.png?raw=true)

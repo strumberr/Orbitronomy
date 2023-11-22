@@ -2,13 +2,16 @@ from setuptools import find_packages, setup
 
 setup(
     name='orbitronomy',
-    packages=find_packages(include=['mypythonlib']),
-    version='0.1.0',
-    description='Orbitronomy, is a Python library designed for calculating and visualizing the orbits of various celestial bodies in 3D, including planets and asteroids, moons, and much more in 3D! Using Keppler Elements, Orbitronomy can calculate the orbits of various celestial bodies in 3D, and plot them in 3D using Matplotlib.',
+    packages=find_packages(),
+    version='0.1.8',
+    description="The Orbitronomy library offers the functionality for plotting, calculating, visualizing, and animating the orbits of various celestial bodies in 3D space. It utilizes Kepler's elliptical orbit equations along with PyAstronomy for orbital calculations, and Matplotlib for 3D plotting.",
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Storm',
+    include_package_data=True, 
     install_requires=[
         'bidict==0.22.1',
-        'certifi==2023.11.17',
+        'certifi',
         'charset-normalizer==3.3.2',
         'contourpy==1.2.0',
         'cycler==0.12.1',
@@ -46,7 +49,7 @@ setup(
         'urllib3==2.1.0',
         'zipp==3.17.0',
     ],
-    setup_require=['pytest'],
+    setup_requires=['pytest'],
     tests_require=['pytest'],
     test_suite='tests',
 )

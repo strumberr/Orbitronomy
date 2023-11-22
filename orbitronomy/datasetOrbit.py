@@ -315,10 +315,10 @@ class datasetOrbit:
 # test.datasetCalculateOrbit(plot_steps=1000, n_orbits=12, color="yellow", 
 #                     random_color=True, trajectory=True, sun=True)
 
-# #you can choose if you want to set boundaries for the plot
-# # test.xLim([20, 20])
-# # test.yLim([20, 20])
-# # test.zLim([0.1, 0.1])
+#you can choose if you want to set boundaries for the plot
+# test.xLim([20, 20])
+# test.yLim([20, 20])
+# test.zLim([0.1, 0.1])
 
 # test.xLabel("X-Axis")
 # test.yLabel("Y-Axis")
