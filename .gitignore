@@ -11,6 +11,8 @@ README2.md
 .DS_Store/
 .DS_Store
 
+orbitronomy/.DS_Store
+
 # C extensions
 *.so
 
