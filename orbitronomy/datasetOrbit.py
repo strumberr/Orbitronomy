@@ -59,6 +59,7 @@ class datasetOrbit:
     def datasetCalculateOrbit(self, plot_steps, n_orbits, data=None, 
                         color=None, trajectory=False, sun=True, random_color=False,
 
+                        delimiter=","
                         ):
         
 
@@ -72,7 +73,7 @@ class datasetOrbit:
         if self.file_name:
 
             with open(self.file_name, mode='r') as file:
-                csv_reader = csv.DictReader(file, delimiter=';')
+                csv_reader = csv.DictReader(file, delimiter=delimiter)
                 
 
                 for row in csv_reader:
@@ -313,7 +314,9 @@ class datasetOrbit:
 
 
 # test.datasetCalculateOrbit(plot_steps=1000, n_orbits=12, color="yellow", 
-#                     random_color=True, trajectory=True, sun=True)
+#                     random_color=True, trajectory=True, sun=True,
+#                     delimiter=";"
+# )
 
 #you can choose if you want to set boundaries for the plot
 # test.xLim([20, 20])

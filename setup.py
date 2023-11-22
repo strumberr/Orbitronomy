@@ -3,11 +3,16 @@ from setuptools import find_packages, setup
 setup(
     name='orbitronomy',
     packages=find_packages(),
-    version='0.1.8',
+    version='0.1.2',
     description="The Orbitronomy library offers the functionality for plotting, calculating, visualizing, and animating the orbits of various celestial bodies in 3D space. It utilizes Kepler's elliptical orbit equations along with PyAstronomy for orbital calculations, and Matplotlib for 3D plotting.",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     author='Storm',
+    url='https://github.com/strumberr/Orbitronomy',
+    project_urls={
+        'Source': 'https://github.com/strumberr/Orbitronomy/tree/main/orbitronomy',
+        'Tracker': 'https://github.com/strumberr/Orbitronomy/issues',
+    },
     include_package_data=True, 
     install_requires=[
         'bidict==0.22.1',
