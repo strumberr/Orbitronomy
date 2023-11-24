@@ -9,11 +9,11 @@ import csv
 
 
 class datasetOrbit:
-    def __init__(self, plot_title, name):
+    def __init__(self, plot_title, name, fps=30):
 
         self.name = name
 
-        self.writer = PillowWriter(fps=30)
+        self.writer = PillowWriter(fps=fps)
 
         self.plot_title = plot_title
 
@@ -27,6 +27,10 @@ class datasetOrbit:
         self.orbital_periods = {}
 
         self.ax = self.fig.add_subplot(111, projection='3d')
+
+        self.num_rows_allowed = None
+
+        self.planet_size = 100
 
 
     def datasetPlotStyle(self, background_color):
@@ -55,84 +59,215 @@ class datasetOrbit:
         
 
         self.alpha = self.orbit_transparency
-    
+
+
+
     def datasetCalculateOrbit(self, plot_steps, n_orbits, data=None, 
                         color=None, trajectory=False, sun=True, random_color=False,
 
                         delimiter=","
                         ):
         
-
-
         if sun:
-            self.ax.scatter([0], [0], [0], color="yellow", s=100, label="Sun")
+            self.ax.scatter([0], [0], [0], color="yellow", s=self.sun_size, label="Sun")
         else:
             pass
 
-        
         if self.file_name:
 
             with open(self.file_name, mode='r') as file:
                 csv_reader = csv.DictReader(file, delimiter=delimiter)
-                
 
-                for row in csv_reader:
-                    self.steps = plot_steps
-                    
-                    self.object_id = row[self.column_name]
-                    self.semi_major_axis = row[self.column_semi_major_axis]
-                    self.perihelion = row[self.column_perihelion]
-                    self.eccentricity = row[self.column_eccentricity]
+                if type(self.num_rows_allowed) == int:
 
-                    if self.eccentricity == 1:
-                        self.eccentricity = 1.0000000000000001e-10
+                    for i, row in enumerate(csv_reader):
 
-                    self.inclination = row[self.column_inclination]
-                    self.longitude_of_ascending_node = row[self.column_longitude_of_ascending_node]
-                    self.argument_of_perihelion = row[self.column_argument_of_perihelion]
+                        self.steps = plot_steps
+
+                        print(self.num_rows_allowed)
+                        
+                        if i >= self.num_rows_allowed:
+                            break
+
+                        self.object_id = row[self.column_name]
+                        self.semi_major_axis = row[self.column_semi_major_axis]
+                        self.perihelion = row[self.column_perihelion]
+                        self.eccentricity = row[self.column_eccentricity]
+
+                        if self.eccentricity == 1:
+                            self.eccentricity = 1.0000000000000001e-10
+
+                        self.inclination = row[self.column_inclination]
+                        self.longitude_of_ascending_node = row[self.column_longitude_of_ascending_node]
+                        self.argument_of_perihelion = row[self.column_argument_of_perihelion]
 
 
-                    self.object_orbit = pyasl.KeplerEllipse(a=float(self.semi_major_axis), per=float(self.perihelion), e=float(self.eccentricity), Omega=float(self.longitude_of_ascending_node), i=float(self.inclination), w=float(self.argument_of_perihelion))
+                        self.object_orbit = pyasl.KeplerEllipse(a=float(self.semi_major_axis), per=float(self.perihelion), e=float(self.eccentricity), Omega=float(self.longitude_of_ascending_node), i=float(self.inclination), w=float(self.argument_of_perihelion))
 
-                    self.t_object = np.linspace(0, 4 * n_orbits, plot_steps)
-                    self.pos_object = self.object_orbit.xyzPos(self.t_object)
+                        self.t_object = np.linspace(0, 4 * n_orbits, plot_steps)
+                        self.pos_object = self.object_orbit.xyzPos(self.t_object)
 
-                    if color == None:
-                        if random_color:
-                            r = lambda: np.random.randint(0,255)
-                            self.color = '#%02X%02X%02X' % (r(),r(),r())
-                        else:
-                            try:
-                                self.color = row[self.column_color]
-                            except:
+                        if color == None:
+                            if random_color:
                                 r = lambda: np.random.randint(0,255)
                                 self.color = '#%02X%02X%02X' % (r(),r(),r())
-                        
-                    else:
-                        if random_color:
-                            r = lambda: np.random.randint(0,255)
-                            self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            else:
+                                try:
+                                    self.color = row[self.column_color]
+                                except:
+                                    r = lambda: np.random.randint(0,255)
+                                    self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            
                         else:
-                            self.color = color
+                            if random_color:
+                                r = lambda: np.random.randint(0,255)
+                                self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            else:
+                                self.color = color
 
-                    self.ax.set_aspect('equal')
+                        self.ax.set_aspect('equal')
 
-                    
+                        
 
-                    self.object_positions[self.object_id] = self.pos_object
+                        self.object_positions[self.object_id] = self.pos_object
 
-                    self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.object_id}")
+                        self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.object_id}", s=self.planet_size)
 
-                    if trajectory:
-                        self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
-                    else:
-                        pass
+                        if trajectory:
+                            self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
+                        else:
+                            pass
 
-                    self.object_dots[self.object_id] = self.object_dot
+                        self.object_dots[self.object_id] = self.object_dot
 
-                    a = float(self.semi_major_axis)
-                    orbital_period = np.sqrt(a**3)
-                    self.orbital_periods[self.object_id] = orbital_period
+                        a = float(self.semi_major_axis)
+                        orbital_period = np.sqrt(a**3)
+                        self.orbital_periods[self.object_id] = orbital_period
+
+                elif type(self.num_rows_allowed) == list:
+
+                    for i, row in enumerate(csv_reader):
+
+                        self.steps = plot_steps
+                        
+                        if (i >= int(self.num_rows_allowed[0])) and (i <= int(self.num_rows_allowed[1])):
+                            
+                            self.object_id = row[self.column_name]
+                            self.semi_major_axis = row[self.column_semi_major_axis]
+                            self.perihelion = row[self.column_perihelion]
+                            self.eccentricity = row[self.column_eccentricity]
+
+                            if self.eccentricity == 1:
+                                self.eccentricity = 1.0000000000000001e-10
+
+                            self.inclination = row[self.column_inclination]
+                            self.longitude_of_ascending_node = row[self.column_longitude_of_ascending_node]
+                            self.argument_of_perihelion = row[self.column_argument_of_perihelion]
+
+
+                            self.object_orbit = pyasl.KeplerEllipse(a=float(self.semi_major_axis), per=float(self.perihelion), e=float(self.eccentricity), Omega=float(self.longitude_of_ascending_node), i=float(self.inclination), w=float(self.argument_of_perihelion))
+
+                            self.t_object = np.linspace(0, 4 * n_orbits, plot_steps)
+                            self.pos_object = self.object_orbit.xyzPos(self.t_object)
+
+                            if color == None:
+                                if random_color:
+                                    r = lambda: np.random.randint(0,255)
+                                    self.color = '#%02X%02X%02X' % (r(),r(),r())
+                                else:
+                                    try:
+                                        self.color = row[self.column_color]
+                                    except:
+                                        r = lambda: np.random.randint(0,255)
+                                        self.color = '#%02X%02X%02X' % (r(),r(),r())
+                                
+                            else:
+                                if random_color:
+                                    r = lambda: np.random.randint(0,255)
+                                    self.color = '#%02X%02X%02X' % (r(),r(),r())
+                                else:
+                                    self.color = color
+
+                            self.ax.set_aspect('equal')
+
+                            
+
+                            self.object_positions[self.object_id] = self.pos_object
+
+                            self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.object_id}", s=self.planet_size)
+
+                            if trajectory:
+                                self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
+                            else:
+                                pass
+
+                            self.object_dots[self.object_id] = self.object_dot
+
+                            a = float(self.semi_major_axis)
+                            orbital_period = np.sqrt(a**3)
+                            self.orbital_periods[self.object_id] = orbital_period
+
+                else:
+
+                    for i, row in enumerate(csv_reader):
+
+                        self.steps = plot_steps
+
+                        self.object_id = row[self.column_name]
+                        self.semi_major_axis = row[self.column_semi_major_axis]
+                        self.perihelion = row[self.column_perihelion]
+                        self.eccentricity = row[self.column_eccentricity]
+
+                        if self.eccentricity == 1:
+                            self.eccentricity = 1.0000000000000001e-10
+
+                        self.inclination = row[self.column_inclination]
+                        self.longitude_of_ascending_node = row[self.column_longitude_of_ascending_node]
+                        self.argument_of_perihelion = row[self.column_argument_of_perihelion]
+
+
+                        self.object_orbit = pyasl.KeplerEllipse(a=float(self.semi_major_axis), per=float(self.perihelion), e=float(self.eccentricity), Omega=float(self.longitude_of_ascending_node), i=float(self.inclination), w=float(self.argument_of_perihelion))
+
+                        self.t_object = np.linspace(0, 4 * n_orbits, plot_steps)
+                        self.pos_object = self.object_orbit.xyzPos(self.t_object)
+
+                        if color == None:
+                            if random_color:
+                                r = lambda: np.random.randint(0,255)
+                                self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            else:
+                                try:
+                                    self.color = row[self.column_color]
+                                except:
+                                    r = lambda: np.random.randint(0,255)
+                                    self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            
+                        else:
+                            if random_color:
+                                r = lambda: np.random.randint(0,255)
+                                self.color = '#%02X%02X%02X' % (r(),r(),r())
+                            else:
+                                self.color = color
+
+                        self.ax.set_aspect('equal')
+
+                        
+
+                        self.object_positions[self.object_id] = self.pos_object
+
+                        self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.object_id}", s=self.planet_size)
+
+                        if trajectory:
+                            self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
+                        else:
+                            pass
+
+                        self.object_dots[self.object_id] = self.object_dot
+
+                        a = float(self.semi_major_axis)
+                        orbital_period = np.sqrt(a**3)
+                        self.orbital_periods[self.object_id] = orbital_period
+                        
 
         else:
             raise ValueError("No file name given")
@@ -172,13 +307,13 @@ class datasetOrbit:
     def datasetAnimateOrbit(self, dpi, save=False, export_zoom=None, 
                      font_size="xx-small", export_folder=None,
                      x_lim=None, y_lim=None, z_lim=None,
-                     x_label="X-Axis", y_label="Y-Axis", z_label="Z-Axis"
+                     x_label="X-Axis", y_label="Y-Axis", z_label="Z-Axis", animation_interval=40
                      ):
 
 
         self.vicinity_radius = export_zoom
 
-        myAnimation = animation.FuncAnimation(self.fig, self.animate_before, interval=40, frames=np.arange(0, self.steps), blit=True, repeat=True)
+        myAnimation = animation.FuncAnimation(self.fig, self.animate_before, interval=animation_interval, frames=np.arange(0, self.steps), blit=True, repeat=True)
 
         self.ax.set_xlabel(x_label)
         self.ax.set_ylabel(y_label)
@@ -279,12 +414,19 @@ class datasetOrbit:
 
     def tickColor(self, tick_color):
         self.tick_color = tick_color
+
+    def numRowsAllowed(self, num_rows_allowed):
+        self.num_rows_allowed = num_rows_allowed
+
+    def sunSize(self, sun_size):
+        self.sun_size = sun_size
+
+    def planetSize(self, planet_size):
+        self.planet_size = planet_size
     
 
-    
 
-
-# test = datasetOrbit(plot_title="Test", name="Earth")
+# test = datasetOrbit(plot_title="Test", name="Earth", fps=30)
 
 
 # #styling
@@ -298,6 +440,11 @@ class datasetOrbit:
 
 # test.datasetPlotStyle(background_color="dark_background")
 
+# #name of the dataset file
+# test.fileName("datasets/Planetary-Satellite-Data.csv")
+
+# # test.numRowsAllowed(1)
+# # test.numRowsAllowed([2, 6])
 
 # #name of the columns in the dataset in CSV format
 # test.columnSemiMajorAxis("semi_major_axis")
@@ -309,23 +456,22 @@ class datasetOrbit:
 # test.columnColor("color")
 # test.columnName("name")
 
-# #name of the dataset file
-# test.fileName("datasets/Planetary-Satellite-Data.csv")
-
+# test.sunSize(1000)
+# test.planetSize(100)
 
 # test.datasetCalculateOrbit(plot_steps=1000, n_orbits=12, color="yellow", 
 #                     random_color=True, trajectory=True, sun=True,
 #                     delimiter=";"
 # )
 
-#you can choose if you want to set boundaries for the plot
-# test.xLim([20, 20])
-# test.yLim([20, 20])
-# test.zLim([0.1, 0.1])
+# # you can choose if you want to set boundaries for the plot
+# # test.xLim([20, 20])
+# # test.yLim([20, 20])
+# # test.zLim([0.1, 0.1])
 
 # test.xLabel("X-Axis")
 # test.yLabel("Y-Axis")
 # test.zLabel("Z-Axis")
 
-# test.datasetAnimateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small")
+# test.datasetAnimateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small", animation_interval=40)
 

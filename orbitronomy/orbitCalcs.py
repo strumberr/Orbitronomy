@@ -9,11 +9,11 @@ import csv
 
 
 class SimpleOrbit:
-    def __init__(self, plot_title, name):
+    def __init__(self, plot_title, name, fps=30):
 
         self.name = name
 
-        self.writer = PillowWriter(fps=30)
+        self.writer = PillowWriter(fps=fps)
 
         self.plot_title = plot_title
 
@@ -27,6 +27,8 @@ class SimpleOrbit:
         self.orbital_periods = {}
 
         self.ax = self.fig.add_subplot(111, projection='3d')
+
+        self.sun_size = 100
 
 
     def plotStyle(self, background_color):
@@ -58,13 +60,12 @@ class SimpleOrbit:
         
     
     def calculateOrbit(self, plot_steps, n_orbits, data=None, 
-                       
                        color=None, trajectory=False, sun=True):
         
         if data:
 
             if sun:
-                self.ax.scatter([0], [0], [0], color="yellow", s=100, label="Sun")
+                self.ax.scatter([0], [0], [0], color="yellow", s=self.sun_size, label="Sun")
             else:
                 pass
             
@@ -109,7 +110,7 @@ class SimpleOrbit:
 
                 self.object_positions[self.object_id] = self.pos_object
 
-                self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.name}")
+                self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.object_id}", s=self.planet_size)
 
                 if trajectory:
                     self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
@@ -146,18 +147,19 @@ class SimpleOrbit:
             self.ax.set_aspect('equal')
 
             if sun:
-                self.ax.scatter([0], [0], [0], color="yellow", s=100, label="Sun")
+                self.ax.scatter([0], [0], [0], color="yellow", s=self.sun_size, label="Sun")
             else:
                 pass
 
             self.object_positions[self.name] = self.pos_object
 
-            self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.name}")
+            self.object_dot = self.ax.scatter([self.pos_object[0][0]], [self.pos_object[0][1]], [self.pos_object[0][2]], color=self.color, label=f"{self.name}", s=self.planet_size)
 
             if trajectory:
                 self.ax.plot(self.pos_object[:,0], self.pos_object[:,1], self.pos_object[:,2], color=self.color, alpha=self.alpha, linewidth=1)
             else:
                 pass
+
 
 
             self.object_dots[self.name] = self.object_dot
@@ -183,7 +185,7 @@ class SimpleOrbit:
 
     def animateOrbit(self, dpi, save=False, 
                      export_zoom=None, font_size="xx-small", 
-                     export_folder=None,
+                     export_folder=None, animation_interval=40,
                      
                      x_lim=None, y_lim=None, z_lim=None,
                      x_label="X-Axis", y_label="Y-Axis", z_label="Z-Axis"
@@ -192,7 +194,7 @@ class SimpleOrbit:
 
         self.vicinity_radius = export_zoom
 
-        myAnimation = animation.FuncAnimation(self.fig, self.animate_before, interval=40, frames=np.arange(0, self.steps), blit=True, repeat=True)
+        myAnimation = animation.FuncAnimation(self.fig, self.animate_before, interval=animation_interval, frames=np.arange(0, self.steps), blit=True, repeat=True)
 
         self.ax.set_xlabel(x_label)
         self.ax.set_ylabel(y_label)
@@ -201,12 +203,6 @@ class SimpleOrbit:
         self.plt.legend(loc="lower right", fontsize=font_size)
         self.plt.title(f'{self.name}')
 
-        if x_lim:
-            self.ax.set_xlim(-x_lim[0], x_lim[1])
-        if y_lim:
-            self.ax.set_ylim(-y_lim[0], y_lim[1])
-        if z_lim:
-            self.ax.set_zlim(-z_lim[0], z_lim[1])
 
         if save:
             # self.ax.view_init(elev=30, azim=-60)
@@ -284,12 +280,20 @@ class SimpleOrbit:
     def argumentOfPerihelion(self, argument_of_perihelion):
         self.argument_of_perihelion = argument_of_perihelion
 
+    def sunSize(self, sun_size):
+        self.sun_size = sun_size
+
+    def planetSize(self, planet_size):
+        self.planet_size = planet_size
 
 
 
 
 
-# test = SimpleOrbit(plot_title="Test", name="Earth")
+
+
+
+# test = SimpleOrbit(plot_title="Test", name="Earth", fps=30)
 
 # #styling
 # test.faceColor("black")
@@ -301,33 +305,61 @@ class SimpleOrbit:
 
 # test.plotStyle(background_color="dark_background")
 
-# the form of the list should be as follows: "name", semi_major_axis, perihelion, eccentricity, inclination, longitude_of_ascending_node, argument_of_perihelion, color (optional)
-# data = [["object1", 1, 0.983289891, 0.01671123, 15, 0, 0, "green"], ["object2", 1.5, 0.483289891, 0.02671123, 6, 0, 0, "yellow"], ["object3", 1.3, 0.683289891, 0.01671123, 2, 0, 0, "red"]]
+# # the form of the list should be as follows: "name", semi_major_axis, perihelion, eccentricity, inclination, longitude_of_ascending_node, argument_of_perihelion, color (optional)
+# # data = [["object1", 1, 0.983289891, 0.01671123, 15, 0, 0, "green"], ["object2", 1.5, 0.483289891, 0.02671123, 6, 0, 0, "yellow"], ["object3", 1.3, 0.683289891, 0.01671123, 2, 0, 0, "red"]]
 
-#you can also use the following instead of data if you want to plot a single object
-# test.semiMajorAxis(1)
-# test.perihelion(0.983289891)
-# test.eccentricity(0.01671123)
-# test.inclination(0)
-# test.longitudeOfAscendingNode(0)
-# test.argumentOfPerihelion(0)
+# # cool shape
+# # data = [['electron1', 0.5, 0.45, 0.1, 10, 0, 0, 'blue'],
+# #  ['electron2', 1.0, 0.9, 0.1, 20, 0, 0, 'green'],
+# #  ['electron3', 1.5, 1.35, 0.1, 30, 0, 0, 'red'],
+# #  ['electron4', 2.0, 1.8, 0.1, 40, 0, 0, 'yellow'],
+# #  ['electron5', 2.5, 2.25, 0.1, 50, 0, 0, 'orange'],
+# #  ['electron6', 3.0, 2.7, 0.1, 60, 0, 0, 'purple']]
+
+# # cool atom shape
+# data = [
+#     ['electron1', 1.0, 0.8, 0.2, 0.0, 0, 0, 'red'],
+#     ['electron2', 1.0, 0.8, 0.2, 30.0, 0, 0, 'red'],
+#     ['electron3', 1.0, 0.8, 0.2, 60.0, 0, 0, 'red'],
+#     ['electron4', 1.0, 0.8, 0.2, 90.0, 0, 0, 'red'],
+#     ['electron5', 1.0, 0.8, 0.2, 120.0, 0, 0, 'red'],
+#     ['electron6', 1.0, 0.8, 0.2, 150.0, 0, 0, 'red']]
+
+# # cool atom shape 2x less
+# # data = [
+# #     ['electron1', 1.0, 0.2, 0.6, 0.0, 0, 0, 'red'],
+# #     ['electron2', 1.0, 0.2, 0.6, 60.0, 0, 0, 'red'],
+# #     ['electron3', 1.0, 0.2, 0.6, 120.0, 0, 0, 'red'],
+# # ]
 
 
 
-# test.calculateOrbit(plot_steps=1000, n_orbits=1, data=data,
+# # you can also use the following instead of data if you want to plot a single object
+# # test.semiMajorAxis(1)
+# # test.perihelion(0.983289891)
+# # test.eccentricity(0.01671123)
+# # test.inclination(0)
+# # test.longitudeOfAscendingNode(0)
+# # test.argumentOfPerihelion(0)
+
+
+# test.sunSize(1000)
+# test.planetSize(100)
+
+# test.calculateOrbit(plot_steps=1000, n_orbits=4, data=data,
 #                     # color="blue",
 #                     trajectory=True, sun=True)
 
 
-#you can choose if you want to set boundaries for the plot
-# test.xLim([20, 20])
-# test.yLim([20, 20])
-# test.zLim([0.1, 0.1])
+# # you can choose if you want to set boundaries for the plot
+# # test.xLim([20, 20])
+# # test.yLim([20, 20])
+# # test.zLim([1, 1])
 
 # test.xLabel("X-Axis")
 # test.yLabel("Y-Axis")
 # test.zLabel("Z-Axis")
 
 
-# test.animateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small", export_folder="results")
+# test.animateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small", export_folder="results", animation_interval=10)
 

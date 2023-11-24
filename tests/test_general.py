@@ -1,48 +1,70 @@
-# Tests for the keppler_elements.py module
-
-from orbitronomy.datasetOrbit import datasetOrbit
+from orbitronomy.relativeOrbit import ParentChildOrbit
 
 
-test = datasetOrbit(plot_title="Test", name="Earth")
-
+test = ParentChildOrbit(plot_title="Test", name="Earth", fps=30)
 
 #styling
 test.faceColor("black")
 test.paneColor("black")
 test.gridColor("#222831")
-test.orbitTransparency(0.5)
 test.labelColor("white")
 test.tickColor("white")
 
+#orbit transparency for object and orbit respectively
+test.orbitTransparencyParentObject(0.5)
+test.orbitTransparencyChildObject(0.5)
 
-test.datasetPlotStyle(background_color="dark_background")
+#parent object colors for object and orbit respectively
+test.colorParentObjectOrbit(["blue", "green"])
 
+#child object colors for object and orbit respectively
+test.colorChildObjectOrbit(["red", "white"])
 
-#name of the columns in the dataset in CSV format
-test.columnSemiMajorAxis("semi_major_axis")
-test.columnPerihelion("perihelion")
-test.columnEccentricity("eccentricity")
-test.columnInclination("inclination")
-test.columnLongitudeOfAscendingNode("longitude_of_ascending_node")
-test.columnArgumentOfPerihelion("argument_of_perihelion")
-test.columnColor("color")
-test.columnName("name")
-
-#name of the dataset file
-test.fileName("datasets/Planetary-Satellite-Data.csv")
+# plot style (has to be run after all styling is done)
+test.plotStyle(background_color="dark_background")
 
 
-test.datasetCalculateOrbit(plot_steps=1000, n_orbits=12, color="yellow", 
-                    random_color=True, trajectory=True, sun=True)
+# parent object keplerian elements
+test.semiMajorAxisParentObject(1)
+test.perihelionParentObject(0.983289891)
+test.eccentricityParentObject(0.01671123)
+test.inclinationParentObject(0)
+test.longitudeOfAscendingNodeParentObject(0)
+test.argumentOfPerihelionParentObject(0)
 
-#you can choose if you want to set boundaries for the plot
+# child object keplerian elements
+test.semiMajorAxisChildObject(0.4)
+test.perihelionChildObject(0.45)
+test.eccentricityChildObject(0.1)
+test.inclinationChildObject(10)
+test.longitudeOfAscendingNodeChildObject(0)
+test.argumentOfPerihelionChildObject(0)
+
+
+test.sunSize(100)
+
+# parent object size
+test.parentObjectSize(100)
+
+# child object size
+test.childObjectSize(100)
+
+# calculateOrbit takes the following arguments + some other ones in documentation
+test.calculateOrbit(plot_steps=1000, n_orbits_child=3,
+                    # color="blue",
+                    n_orbits_parent=1,
+                    trajectory=True, sun=True, child_trajectory=True)
+
+
+# you can choose if you want to set boundaries for the plot
 # test.xLim([20, 20])
 # test.yLim([20, 20])
-# test.zLim([0.1, 0.1])
+# test.zLim([1, 1])
 
+# you can choose if you want to set labels for the plot
 test.xLabel("X-Axis")
 test.yLabel("Y-Axis")
 test.zLabel("Z-Axis")
 
-test.datasetAnimateOrbit(dpi=250, save=False, export_zoom=3, font_size="xx-small")
 
+test.animateOrbit(dpi=250, save=False, export_zoom=3, export_folder="results", font_size="xx-small", animation_interval=10)
