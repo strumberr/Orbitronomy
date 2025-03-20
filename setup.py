@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name='orbitronomy',
     packages=find_packages(),
-    version='0.3.2',
+    version='0.4.0',
     description="The Orbitronomy library is designed to simplify the process of plotting, calculating, visualizing, and animating the orbits of celestial bodies in 3D space. It employs Kepler's elliptical orbit equations and Keplerian Elements, in conjunction with PyAstronomy, to perform precise orbital calculations. For 3D plotting, it integrates the capabilities of Matplotlib, enhancing its utility in astronomical simulations and analyses.",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
